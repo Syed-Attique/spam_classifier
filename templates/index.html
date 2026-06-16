@@ -1,81 +1,81 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>SMS Spam Classifier</title>
+    <title>Spam Classifier</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
+
 <body>
 
-<div class="container">
+    <div class="container">
 
-    <h1>Spam Classifier</h1>
-    <p class="subtitle">Naive Bayes based spam detection</p>
+        <h1>Spam Classifier</h1>
+        <p class="subtitle">Naive Bayes based spam detection</p>
 
-    <form method="POST" class="card">
-        <label>Enter Message &#x25BC</label>
+        <form method="POST" class="card">
+            <label>Enter Message &#x25BC</label>
 
-        <textarea
-            name="message"
-            placeholder="Example: Congratulations! Claim your free prize now..."
-            required
-        ></textarea>
+            <textarea name="message" placeholder="Example: Congratulations! Claim your free prize now..."
+                required></textarea>
 
-        <button type="submit">Classify Message</button>
-    </form>
+            <button type="submit">Classify Message</button>
+        </form>
 
-    {% if result %}
-    <div class="card result-card">
+        {% if result %}
+        <div class="card result-card">
 
-        <h2>Prediction Result</h2>
+            <h2>Prediction Result</h2>
 
-        <div class="prediction {{ result.prediction }}">
-            {{ result.prediction.upper() }}
-        </div>
-
-        <div class="section">
-            <h3>Original Message</h3>
-            <p>{{ result.message }}</p>
-        </div>
-
-        <div class="section">
-            <h3>Processed Words</h3>
-            <div class="chips">
-                {% for word in result.processed_words %}
-                    <span>{{ word }}</span>
-                {% endfor %}
+            <div class="prediction {{ result.prediction }}">
+                {{ result.prediction.upper() }}
             </div>
-        </div>
 
-        <div class="section">
-            <h3>Words Used by Model</h3>
-            <div class="chips used">
-                {% for word in result.used_words %}
-                    <span>{{ word }}</span>
-                {% endfor %}
+            <div class="section">
+                <h3>Original Message</h3>
+                <p>{{ result.message }}</p>
             </div>
-        </div>
 
-        {% if result.ignored_words %}
-        <div class="section">
-            <h3>Ignored Words</h3>
-            <div class="chips ignored">
-                {% for word in result.ignored_words %}
+            <div class="section">
+                <h3>Processed Words</h3>
+                <div class="chips">
+                    {% for word in result.processed_words %}
                     <span>{{ word }}</span>
-                {% endfor %}
+                    {% endfor %}
+                </div>
             </div>
+
+            <div class="section">
+                <h3>Words Used by Model</h3>
+                <div class="chips used">
+                    {% for word in result.used_words %}
+                    <span>{{ word }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+
+            {% if result.ignored_words %}
+            <div class="section">
+                <h3>Ignored Words</h3>
+                <div class="chips ignored">
+                    {% for word in result.ignored_words %}
+                    <span>{{ word }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <details>
+                <summary>Advanced Model Scores</summary>
+                <p><strong style="color:#ff1744;">Spam Score:</strong> {{ result.spam_score }}</p>
+                <p><strong style="color:#00b64c;">Ham Score:</strong> {{ result.ham_score }}</p>
+            </details>
+
         </div>
         {% endif %}
 
-        <details>
-            <summary>Advanced Model Scores</summary>
-            <p><strong style="color:#ff1744;">Spam Score:</strong> {{ result.spam_score }}</p>
-            <p><strong style="color:#00b64c;">Ham Score:</strong> {{ result.ham_score }}</p>
-        </details>
-
     </div>
-    {% endif %}
-
-</div>
 
 </body>
+
 </html>
