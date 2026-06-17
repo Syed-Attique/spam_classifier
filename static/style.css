@@ -15,7 +15,7 @@ body {
 
 .container {
     max-width: 850px;
-    margin: 5px auto;
+    margin: 20px auto;
     padding: 20px;
 }
 
@@ -42,12 +42,9 @@ h1 {
     box-shadow: 10px 13px 25px rgba(255, 0, 170, 0.3);
     margin-bottom: 24px;
     backdrop-filter: blur(9px);
-    outline: none;
-    /* Removes default focus outline */
-    caret-color: #ffffff;
-    /* Changes caret color to orange-red */
-    caret-shape: block;
-    /* Options: bar, block, underscore (modern browsers) */
+    outline: none; /* Removes default focus outline */
+    caret-color:  #ffffff; /* Changes caret color to orange-red */
+    caret-shape: block; /* Options: bar, block, underscore (modern browsers) */
 }
 
 
@@ -63,7 +60,7 @@ textarea {
     min-height: 150px;
     resize: vertical;
     padding: 14px;
-    border: 1px solid #ffffff;
+    border: 1px solid #d10087;
     border-radius: 10px;
     background: #090909;
     color: #ffffff;
@@ -174,3 +171,4 @@ summary {
     color: #ffffff;
     font-weight: bold;
 }
+
