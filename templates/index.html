@@ -1,8 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>Spam Classifier</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Spam Classifier Comparison</title>
+
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
@@ -10,68 +14,273 @@
 
     <div class="container">
 
-        <h1>Spam Classifier</h1>
-        <p class="subtitle">Naive Bayes based spam detection</p>
+        <header class="page-header">
+            <h1>Spam Classifier</h1>
 
-        <form method="POST" class="card">
-            <label>Enter Message &#x25BC</label>
+            <p class="subtitle">
+                Compare Naive Bayes and Logistic Regression
+            </p>
+        </header>
 
-            <textarea name="message" placeholder="Example: Congratulations! Claim your free prize now..."
-                required></textarea>
+        <form method="POST" class="card input-card">
 
-            <button type="submit">Classify Message</button>
+            <label for="message">
+                Enter Message &#x25BC;
+            </label>
+
+            <textarea id="message" name="message" placeholder="Example: Congratulations! Claim your free prize now..."
+                required>{{ message }}</textarea>
+
+            <button type="submit">
+                Classify Message
+            </button>
+
         </form>
 
-        {% if result %}
-        <div class="card result-card">
+        {% if naive_bayes_result and logistic_result %}
 
-            <h2>Prediction Result</h2>
+        {% if naive_bayes_result.prediction != logistic_result.prediction %}
 
-            <div class="prediction {{ result.prediction }}">
-                {{ result.prediction.upper() }}
-            </div>
+        <div class="disagreement-banner">
+            <strong>Model disagreement:</strong>
+            Naive Bayes and Logistic Regression classified this
+            message differently.
+        </div>
 
-            <div class="section">
-                <h3>Original Message</h3>
-                <p>{{ result.message }}</p>
-            </div>
+        {% endif %}
 
-            <div class="section">
-                <h3>Processed Words</h3>
-                <div class="chips">
-                    {% for word in result.processed_words %}
-                    <span>{{ word }}</span>
-                    {% endfor %}
+        <div class="comparison-grid">
+
+            <!-- Naive Bayes -->
+
+            <section class="card model-card">
+
+                <div class="model-heading">
+
+                    <div>
+                        <p class="model-label">Model 1</p>
+                        <h2>Naive Bayes</h2>
+                    </div>
+
+                    <div class="prediction {{ naive_bayes_result.prediction }}">
+                        {{ naive_bayes_result.prediction.upper() }}
+                    </div>
+
                 </div>
-            </div>
 
-            <div class="section">
-                <h3>Words Used by Model</h3>
-                <div class="chips used">
-                    {% for word in result.used_words %}
-                    <span>{{ word }}</span>
-                    {% endfor %}
+                <div class="section">
+
+                    <h3>Processed Words</h3>
+
+                    <div class="chips">
+
+                        {% for word in naive_bayes_result.processed_words %}
+                        <span>{{ word }}</span>
+                        {% endfor %}
+
+                    </div>
+
                 </div>
-            </div>
 
-            {% if result.ignored_words %}
-            <div class="section">
-                <h3>Ignored Words</h3>
-                <div class="chips ignored">
-                    {% for word in result.ignored_words %}
-                    <span>{{ word }}</span>
-                    {% endfor %}
+                <div class="section">
+
+                    <h3>Words Used by Model</h3>
+
+                    <div class="chips used">
+
+                        {% for word in naive_bayes_result.used_words %}
+                        <span>{{ word }}</span>
+                        {% endfor %}
+
+                    </div>
+
                 </div>
-            </div>
-            {% endif %}
 
-            <details>
-                <summary>Advanced Model Scores</summary>
-                <p><strong style="color:#ff1744;">Spam Score:</strong> {{ result.spam_score }}</p>
-                <p><strong style="color:#00b64c;">Ham Score:</strong> {{ result.ham_score }}</p>
-            </details>
+                {% if naive_bayes_result.ignored_words %}
+
+                <div class="section">
+
+                    <h3>Ignored Words</h3>
+
+                    <div class="chips ignored">
+
+                        {% for word in naive_bayes_result.ignored_words %}
+                        <span>{{ word }}</span>
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+                {% endif %}
+
+                <details>
+
+                    <summary>Advanced Model Scores</summary>
+
+                    <div class="advanced-grid">
+
+                        <p>
+                            <strong class="spam-text">
+                                Spam Score:
+                            </strong>
+
+                            {{
+                            "%.4f"
+                            |format(naive_bayes_result.spam_score)
+                            }}
+                        </p>
+
+                        <p>
+                            <strong class="ham-text">
+                                Ham Score:
+                            </strong>
+
+                            {{
+                            "%.4f"
+                            |format(naive_bayes_result.ham_score)
+                            }}
+                        </p>
+
+                    </div>
+
+                </details>
+
+            </section>
+
+            <!-- Logistic Regression -->
+
+            <section class="card model-card">
+
+                <div class="model-heading">
+
+                    <div>
+                        <p class="model-label">Model 2</p>
+                        <h2>Logistic Regression</h2>
+                    </div>
+
+                    <div class="prediction {{ logistic_result.prediction }}">
+                        {{ logistic_result.prediction.upper() }}
+                    </div>
+
+                </div>
+
+                <div class="probability-panel">
+
+                    <div class="probability-row">
+
+                        <span>Spam Probability</span>
+
+                        <strong class="spam-text">
+                            {{
+                            "%.2f"
+                            |format(
+                            logistic_result.spam_probability * 100
+                            )
+                            }}%
+                        </strong>
+
+                    </div>
+
+                    <div class="probability-bar">
+
+                        <div class="probability-fill spam-fill" style="width: {{ logistic_result.spam_probability * 100 }}%;"></div>
+
+                    </div>
+
+                    <div class="probability-row">
+
+                        <span>Ham Probability</span>
+
+                        <strong class="ham-text">
+                            {{
+                            "%.2f"
+                            |format(
+                            logistic_result.ham_probability * 100
+                            )
+                            }}%
+                        </strong>
+
+                    </div>
+
+                    <div class="probability-bar">
+
+                        <div class="probability-fill ham-fill" style="width: {{ logistic_result.ham_probability * 100 }}%;"></div>
+
+                    </div>
+
+                </div>
+
+                <div class="section">
+
+                    <h3>Processed Words</h3>
+
+                    <div class="chips">
+
+                        {% for word in logistic_result.processed_words %}
+                        <span>{{ word }}</span>
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+                <div class="section">
+
+                    <h3>Words Used by Model</h3>
+
+                    <div class="chips used">
+
+                        {% for word in logistic_result.used_words %}
+                        <span>{{ word }}</span>
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+                {% if logistic_result.ignored_words %}
+
+                <div class="section">
+
+                    <h3>Ignored Words</h3>
+
+                    <div class="chips ignored">
+
+                        {% for word in logistic_result.ignored_words %}
+                        <span>{{ word }}</span>
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+                {% endif %}
+
+                <details>
+
+                    <summary>Advanced Model Details</summary>
+
+                    <p class="advanced-note">
+                        Logistic Regression converts the message into a
+                        TF-IDF vector and classifies it using learned
+                        weights, bias, and a 0.5 decision threshold.
+                    </p>
+
+                </details>
+
+            </section>
 
         </div>
+
+        <section class="card original-message-card">
+
+            <h2>Original Message</h2>
+
+            <p>{{ message }}</p>
+
+        </section>
+
         {% endif %}
 
     </div>
