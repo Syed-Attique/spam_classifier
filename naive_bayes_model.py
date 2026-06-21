@@ -1,5 +1,6 @@
 import math
 import string
+import re
 from nltk.stem import PorterStemmer
 
 stemmer = PorterStemmer()
@@ -10,9 +11,21 @@ stopwords = {
     "i", "you", "me", "my"
 }
 
-
 def preprocess(message):
     message = message.lower()
+
+    email_pattern = r"\b[\w.-]+@[\w.-]+\.\w+\b"
+    url_pattern = r"(https?://\S+|www\.\S+|\b[\w.-]+\.(?:com|net|org|io|co|pk|uk|ly|info|biz|ru|cn|xyz)\S*)"
+    phone_pattern = r"\+?\d[\d\s\-()]{7,}\d"
+    currency_pattern = r"(\$|£|€|\brs\.?\b|\bpkr\b|\busd\b|\bdollars?\b|\brupees?\b|\bpounds?\b)"
+    number_suffix_pattern = r"\b\d+(?:s|k|p|rs|pm|am)?\b"
+    number_pattern = r"\b\d+\b"
+
+    message = re.sub(email_pattern, " emailtoken ", message)
+    message = re.sub(url_pattern, " urltoken ", message)
+    message = re.sub(phone_pattern, " phonetoken ", message)
+    message = re.sub(currency_pattern, " currencytoken ", message)
+    message = re.sub(number_suffix_pattern, " numbertoken ", message)
 
     cleaned = ""
 
@@ -22,12 +35,29 @@ def preprocess(message):
 
     words = []
 
+    special_tokens = {
+        "urltoken",
+        "emailtoken",
+        "phonetoken",
+        "currencytoken",
+        "numbertoken"
+    }
+
     for word in cleaned.split():
         if word not in stopwords:
-            stemmed_word = stemmer.stem(word)
-            words.append(stemmed_word)
+            if word in special_tokens:
+                words.append(word)
+            else:
+                stemmed_word = stemmer.stem(word)
+                words.append(stemmed_word)
 
-    return words
+    bigrams = []
+
+    for i in range(len(words) - 1):
+        bigram = words[i] + "_" + words[i + 1]
+        bigrams.append(bigram)
+
+    return words + bigrams
 
 
 def calculate_word_probability(word, word_counts, total_words, vocab_size):

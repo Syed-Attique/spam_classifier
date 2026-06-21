@@ -222,5 +222,5 @@ logistic_model = {
 
 os.makedirs("models", exist_ok=True)
 
-with open("models/logistic_regression_v2.pkl", "wb") as file:
+with open("models/logistic_regression_v3.pkl", "wb") as file:
     pickle.dump(logistic_model, file)

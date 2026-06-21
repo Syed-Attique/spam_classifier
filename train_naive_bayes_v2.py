@@ -141,7 +141,7 @@ def main():
 
     os.makedirs("models", exist_ok=True)
 
-    with open("models/naive_bayes_v2.pkl", "wb") as file:
+    with open("models/naive_bayes_v3.pkl", "wb") as file:
         pickle.dump(model, file)
 
 

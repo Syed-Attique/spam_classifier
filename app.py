@@ -8,11 +8,11 @@ from logistic_regression_model import predict_text as logistic_predict
 app = Flask(__name__)
 
 
-with open("model.pkl", "rb") as file:
+with open("models/naive_bayes_v3.pkl", "rb") as file:
     naive_bayes_model = pickle.load(file)
 
 
-with open("logistic_model.pkl", "rb") as file:
+with open("models/logistic_regression_v3.pkl", "rb") as file:
     logistic_model = pickle.load(file)
 
 
