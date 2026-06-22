@@ -217,6 +217,8 @@ logistic_model = {
     "vocabulary": vocabulary,
     "idf": idf,
     "threshold": 0.5,
+    "spam_threshold": 0.75,
+    "ham_threshold": 0.35,
     "min_freq": MIN_FREQ
 }
 

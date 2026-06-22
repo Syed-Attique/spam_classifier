@@ -253,6 +253,14 @@ button:active {
         0 0 14px rgba(0, 200, 83, 0.6);
 }
 
+.prediction.uncertain {
+    background: #ffb020;
+    color: #111111;
+
+    box-shadow:
+        0 0 14px rgba(255, 176, 32, 0.5);
+}
+
 .section {
     margin-top: 22px;
 }

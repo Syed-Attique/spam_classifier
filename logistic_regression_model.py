@@ -27,6 +27,17 @@ def predict(features, weights, bias, threshold=0.5):
     else:
         return 0
 
+def prediction_label_from_probability(
+    probability,
+    spam_threshold=0.75,
+    ham_threshold=0.35
+):
+    if probability >= spam_threshold:
+        return "spam"
+    elif probability <= ham_threshold:
+        return "ham"
+    else:
+        return "uncertain"
 
 from naive_bayes_model import preprocess
 from tfidf_vectorizer import filter_words, document_to_tfidf
@@ -52,10 +63,13 @@ def predict_text(message, model):
         model["bias"]
     )
 
-    prediction = (
-        "spam"
-        if probability >= model["threshold"]
-        else "ham"
+    spam_threshold = model.get("spam_threshold", 0.75)
+    ham_threshold = model.get("ham_threshold", 0.35)
+
+    prediction = prediction_label_from_probability(
+        probability,
+        spam_threshold,
+        ham_threshold
     )
 
     ignored_words = [
