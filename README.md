@@ -832,6 +832,3 @@ It includes:
 
 **The project is not a production-grade spam filter.** It is a learning project designed to understand the full ML workflow from data to deployment-style interface.
 
----
-
-*Last Updated: 2024*
